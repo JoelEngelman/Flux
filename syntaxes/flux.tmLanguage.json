@@ -1,1 +1,783 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Flux",
+  "scopeName": "source.flux",
+  "fileTypes": [
+    "flux"
+  ],
+  "firstLineMatch": "^#!.*\\bflux\\b",
+  "uuid": "7a7a4a8e-6f24-4d6f-9e17-flux-language",
 
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#shebang"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#booleans"
+    },
+    {
+      "include": "#null"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#declarations"
+    },
+    {
+      "include": "#control-flow"
+    },
+    {
+      "include": "#functions"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#builtins"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#assignment"
+    },
+    {
+      "include": "#access"
+    },
+    {
+      "include": "#arrays"
+    },
+    {
+      "include": "#objects"
+    },
+    {
+      "include": "#decorators"
+    },
+    {
+      "include": "#interpolation"
+    },
+    {
+      "include": "#identifiers"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+
+  "repository": {
+
+    "shebang": {
+      "patterns": [
+        {
+          "name": "comment.line.shebang.flux",
+          "match": "^#!.*$"
+        }
+      ]
+    },
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.flux",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.flux"
+            }
+          }
+        },
+        {
+          "name": "comment.line.double-slash.flux",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.line.hash.flux",
+          "match": "(?<![A-Za-z0-9_])#.*$"
+        }
+      ]
+    },
+
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.flux",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape-sequences"
+            },
+            {
+              "include": "#interpolation"
+            }
+          ]
+        },
+
+        {
+          "name": "string.quoted.single.flux",
+          "begin": "'",
+          "end": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape-sequences"
+            }
+          ]
+        },
+
+        {
+          "name": "string.quoted.triple.flux",
+          "begin": "\"\"\"",
+          "end": "\"\"\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape-sequences"
+            },
+            {
+              "include": "#interpolation"
+            }
+          ]
+        },
+
+        {
+          "name": "string.template.flux",
+          "begin": "`",
+          "end": "`",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape-sequences"
+            },
+            {
+              "include": "#interpolation"
+            }
+          ]
+        }
+      ]
+    },
+
+    "escape-sequences": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.flux",
+          "match": "\\\\(?:n|r|t|b|f|v|0|\\\\|\"|'|`)"
+        },
+        {
+          "name": "constant.character.escape.unicode.flux",
+          "match": "\\\\u\\{[0-9A-Fa-f]+\\}"
+        },
+        {
+          "name": "constant.character.escape.hex.flux",
+          "match": "\\\\x[0-9A-Fa-f]{2}"
+        }
+      ]
+    },
+
+    "interpolation": {
+      "patterns": [
+        {
+          "name": "meta.interpolation.flux",
+          "begin": "\\$\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.interpolation.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.interpolation.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#expressions"
+            }
+          ]
+        }
+      ]
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.flux",
+          "match": "\\b0[xX][0-9A-Fa-f](?:_?[0-9A-Fa-f])*\\b"
+        },
+        {
+          "name": "constant.numeric.binary.flux",
+          "match": "\\b0[bB][01](?:_?[01])*\\b"
+        },
+        {
+          "name": "constant.numeric.octal.flux",
+          "match": "\\b0[oO][0-7](?:_?[0-7])*\\b"
+        },
+        {
+          "name": "constant.numeric.float.flux",
+          "match": "\\b(?:\\d(?:_?\\d)*)?\\.\\d(?:_?\\d)*(?:[eE][+-]?\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.exponent.flux",
+          "match": "\\b\\d(?:_?\\d)*[eE][+-]?\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.flux",
+          "match": "\\b\\d(?:_?\\d)*\\b"
+        }
+      ]
+    },
+
+    "booleans": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.true.flux",
+          "match": "\\btrue\\b"
+        },
+        {
+          "name": "constant.language.boolean.false.flux",
+          "match": "\\bfalse\\b"
+        }
+      ]
+    },
+
+    "null": {
+      "patterns": [
+        {
+          "name": "constant.language.null.flux",
+          "match": "\\b(?:null|none|nil)\\b"
+        }
+      ]
+    },
+
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.flux",
+          "match": "\\b(?:if|else|when|otherwise|unless|while|until|repeat|loop|for|in|of|match|case|default|break|continue|return|yield|try|catch|finally|throw|raise|assert)\\b"
+        },
+
+        {
+          "name": "keyword.declaration.flux",
+          "match": "\\b(?:let|make|const|fixed|var|create|define|declare|set|use|import|export|from|as|module|package|project)\\b"
+        },
+
+        {
+          "name": "keyword.operator.word.flux",
+          "match": "\\b(?:and|or|not|is|isn't|equals|contains|starts|ends|in|notin)\\b"
+        },
+
+        {
+          "name": "keyword.storage.flux",
+          "match": "\\b(?:public|private|protected|internal|static|final|async|await|native|extern|inline|unsafe|sealed|abstract|override)\\b"
+        },
+
+        {
+          "name": "keyword.other.flux",
+          "match": "\\b(?:where|with|into|using|as|from|by|via|on|at|inside|outside|before|after)\\b"
+        }
+      ]
+    },
+
+    "declarations": {
+      "patterns": [
+        {
+          "match": "\\b(make|let|const|fixed|var)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.variable.flux"
+            },
+            "2": {
+              "name": "variable.other.definition.flux"
+            }
+          }
+        },
+
+        {
+          "match": "\\b(create|define)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.function.flux"
+            },
+            "2": {
+              "name": "entity.name.function.flux"
+            }
+          }
+        },
+
+        {
+          "match": "\\b(project)\\s+(\"[^\"]*\"|[A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.project.flux"
+            },
+            "2": {
+              "name": "entity.name.namespace.project.flux"
+            }
+          }
+        },
+
+        {
+          "match": "\\b(module|package)\\s+([A-Za-z_][A-Za-z0-9_.]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.module.flux"
+            },
+            "2": {
+              "name": "entity.name.namespace.flux"
+            }
+          }
+        }
+      ]
+    },
+
+    "control-flow": {
+      "patterns": [
+        {
+          "name": "keyword.control.conditional.flux",
+          "match": "\\b(?:if|else|when|otherwise|unless|match|case|default)\\b"
+        },
+        {
+          "name": "keyword.control.loop.flux",
+          "match": "\\b(?:while|until|repeat|loop|for|in|of)\\b"
+        },
+        {
+          "name": "keyword.control.exception.flux",
+          "match": "\\b(?:try|catch|finally|throw|raise|assert)\\b"
+        },
+        {
+          "name": "keyword.control.return.flux",
+          "match": "\\b(?:return|yield)\\b"
+        },
+        {
+          "name": "keyword.control.loop.exit.flux",
+          "match": "\\b(?:break|continue)\\b"
+        }
+      ]
+    },
+
+    "functions": {
+      "patterns": [
+        {
+          "match": "\\b(create|define)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.function.flux"
+            },
+            "2": {
+              "name": "entity.name.function.flux"
+            }
+          }
+        },
+
+        {
+          "name": "entity.name.function.call.flux",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
+        },
+
+        {
+          "name": "variable.parameter.flux",
+          "match": "(?<=\\()[A-Za-z_][A-Za-z0-9_]*(?=\\s*(?:,|\\)))"
+        }
+      ]
+    },
+
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.flux",
+          "match": "\\b(?:text|string|number|integer|decimal|boolean|bool|list|array|map|object|set|tuple|function|fn|void|any|unknown|never|byte|bytes|date|time|datetime|url|path|file|error)\\b"
+        },
+
+        {
+          "name": "entity.name.type.class.flux",
+          "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.flux",
+          "match": "\\b(?:print|say|write|read|input|ask|log|debug|warn|error|panic|exit)\\b"
+        },
+
+        {
+          "name": "support.function.math.flux",
+          "match": "\\b(?:abs|ceil|floor|round|sqrt|pow|sin|cos|tan|asin|acos|atan|atan2|log|ln|exp|min|max|clamp|random|randomInt|randomFloat|pi|e)\\b"
+        },
+
+        {
+          "name": "support.function.collection.flux",
+          "match": "\\b(?:len|length|count|first|last|push|pop|shift|unshift|insert|remove|contains|find|filter|map|reduce|sort|reverse|join|split|slice|range|zip|enumerate)\\b"
+        },
+
+        {
+          "name": "support.function.conversion.flux",
+          "match": "\\b(?:str|text|num|number|int|integer|float|bool|boolean|list|array|set|tuple|json|parse|stringify)\\b"
+        },
+
+        {
+          "name": "support.function.system.flux",
+          "match": "\\b(?:now|today|sleep|time|clock|env|platform|os|args|exit|exec|command)\\b"
+        },
+
+        {
+          "name": "support.function.file.flux",
+          "match": "\\b(?:open|close|readFile|writeFile|appendFile|exists|deleteFile|copyFile|moveFile|listFiles|mkdir|rmdir)\\b"
+        },
+
+        {
+          "name": "support.function.network.flux",
+          "match": "\\b(?:fetch|request|get|post|put|patch|delete|download|upload|connect|listen|send|receive)\\b"
+        },
+
+        {
+          "name": "support.function.web.flux",
+          "match": "\\b(?:html|css|dom|element|render|route|serve|redirect|response|request)\\b"
+        },
+
+        {
+          "name": "support.function.data.flux",
+          "match": "\\b(?:json|xml|csv|yaml|encode|decode|serialize|deserialize|parse|format)\\b"
+        },
+
+        {
+          "name": "support.function.ai.flux",
+          "match": "\\b(?:ai|model|prompt|complete|generate|embed|tokenize|classify|chat)\\b"
+        }
+      ]
+    },
+
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.pi.flux",
+          "match": "\\bPI\\b"
+        },
+        {
+          "name": "constant.language.e.flux",
+          "match": "\\bE\\b"
+        },
+        {
+          "name": "constant.language.infinity.flux",
+          "match": "\\b(?:Infinity|INF)\\b"
+        },
+        {
+          "name": "constant.language.nan.flux",
+          "match": "\\bNaN\\b"
+        }
+      ]
+    },
+
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.flux",
+          "match": "===|!==|==|!=|<=|>=|<=>|<|>"
+        },
+
+        {
+          "name": "keyword.operator.assignment.flux",
+          "match": "\\+=|-=|\\*=|/=|%=|\\^=|&=|\\|=|=|:=|<-"
+        },
+
+        {
+          "name": "keyword.operator.arithmetic.flux",
+          "match": "\\+|-|\\*|/|%|\\^|//"
+        },
+
+        {
+          "name": "keyword.operator.logical.flux",
+          "match": "&&|\\|\\||!|\\b(?:and|or|not)\\b"
+        },
+
+        {
+          "name": "keyword.operator.bitwise.flux",
+          "match": "&|\\||~|<<|>>|>>>"
+        },
+
+        {
+          "name": "keyword.operator.pipeline.flux",
+          "match": "\\|>|<\\||=>"
+        },
+
+        {
+          "name": "keyword.operator.range.flux",
+          "match": "\\.\\.|\\.\\.\\."
+        },
+
+        {
+          "name": "keyword.operator.optional.flux",
+          "match": "\\?\\.|\\?\\?|\\?="
+        }
+      ]
+    },
+
+    "assignment": {
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(=|:=|\\+=|-=|\\*=|/=|%=)\\s*",
+          "captures": {
+            "1": {
+              "name": "variable.other.flux"
+            },
+            "2": {
+              "name": "keyword.operator.assignment.flux"
+            }
+          }
+        }
+      ]
+    },
+
+    "access": {
+      "patterns": [
+        {
+          "name": "variable.other.property.flux",
+          "match": "(?<=\\.)[A-Za-z_][A-Za-z0-9_]*"
+        },
+
+        {
+          "name": "punctuation.accessor.flux",
+          "match": "\\."
+        },
+
+        {
+          "name": "punctuation.optional-accessor.flux",
+          "match": "\\?\\."
+        }
+      ]
+    },
+
+    "arrays": {
+      "patterns": [
+        {
+          "name": "meta.array.flux",
+          "begin": "\\[",
+          "end": "\\]",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.array.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.array.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#expressions"
+            }
+          ]
+        }
+      ]
+    },
+
+    "objects": {
+      "patterns": [
+        {
+          "name": "meta.object.flux",
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.object.begin.flux"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.object.end.flux"
+            }
+          },
+          "patterns": [
+            {
+              "match": "([A-Za-z_][A-Za-z0-9_]*|\"[^\"]*\")\\s*:",
+              "captures": {
+                "1": {
+                  "name": "entity.name.tag.property.flux"
+                }
+              }
+            },
+            {
+              "include": "#expressions"
+            }
+          ]
+        }
+      ]
+    },
+
+    "decorators": {
+      "patterns": [
+        {
+          "name": "meta.decorator.flux",
+          "match": "@[A-Za-z_][A-Za-z0-9_.]*"
+        }
+      ]
+    },
+
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.language.this.flux",
+          "match": "\\b(?:this|self|super)\\b"
+        },
+
+        {
+          "name": "variable.language.arguments.flux",
+          "match": "\\b(?:args|arguments)\\b"
+        },
+
+        {
+          "name": "variable.other.readwrite.flux",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.comma.flux",
+          "match": ","
+        },
+
+        {
+          "name": "punctuation.terminator.statement.flux",
+          "match": ";"
+        },
+
+        {
+          "name": "punctuation.separator.key-value.flux",
+          "match": ":"
+        },
+
+        {
+          "name": "punctuation.definition.parameters.begin.flux",
+          "match": "\\("
+        },
+
+        {
+          "name": "punctuation.definition.parameters.end.flux",
+          "match": "\\)"
+        },
+
+        {
+          "name": "punctuation.definition.block.begin.flux",
+          "match": "\\{"
+        },
+
+        {
+          "name": "punctuation.definition.block.end.flux",
+          "match": "\\}"
+        },
+
+        {
+          "name": "punctuation.definition.array.begin.flux",
+          "match": "\\["
+        },
+
+        {
+          "name": "punctuation.definition.array.end.flux",
+          "match": "\\]"
+        }
+      ]
+    },
+
+    "expressions": {
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#booleans"
+        },
+        {
+          "include": "#null"
+        },
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#builtins"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#functions"
+        },
+        {
+          "include": "#access"
+        },
+        {
+          "include": "#arrays"
+        },
+        {
+          "include": "#objects"
+        },
+        {
+          "include": "#identifiers"
+        }
+      ]
+    }
+  }
+}
