@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flux — A Language For Everything</title>
+
+<meta name="description" content="Flux is a modern programming language designed to make building anything simple.">
+<meta name="theme-color" content="#08090d">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(139,92,246,.22), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(56,189,248,.16), transparent 30%),
+    #07080c;
+  color: #f5f7ff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+nav {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, calc(100% - 30px));
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  background: rgba(20,22,30,.62);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  border-radius: 22px;
+  z-index: 100;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: #9b7cff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-links a {
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: #b7bdce;
+  font-size: 14px;
+  transition: .2s;
+}
+
+.nav-links a:hover {
+  color: white;
+  background: rgba(255,255,255,.08);
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 140px 20px 100px;
+}
+
+.hero-content {
+  max-width: 950px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  background: rgba(139,92,246,.12);
+  border: 1px solid rgba(139,92,246,.3);
+
+  color: #c8baff;
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9b7cff;
+  box-shadow: 0 0 15px #9b7cff;
+}
+
+h1 {
+  margin: 0;
+
+  font-size: clamp(70px, 13vw, 170px);
+  line-height: .82;
+  letter-spacing: -9px;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #b8a5ff 45%,
+    #75d9ff
+  );
+
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero h2 {
+  margin: 35px auto 20px;
+  max-width: 700px;
+
+  font-size: clamp(25px, 4vw, 46px);
+  letter-spacing: -2px;
+}
+
+.hero p {
+  max-width: 650px;
+  margin: auto;
+
+  color: #a5abbc;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.buttons {
+  margin-top: 35px;
+
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 14px 22px;
+  border-radius: 15px;
+
+  font-weight: 700;
+  font-size: 15px;
+
+  transition: .2s;
+}
+
+.primary {
+  background: white;
+  color: #090a0e;
+}
+
+.primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(255,255,255,.15);
+}
+
+.secondary {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.secondary:hover {
+  background: rgba(255,255,255,.1);
+}
+
+section {
+  max-width: 1100px;
+  margin: auto;
+  padding: 110px 20px;
+}
+
+.section-title {
+  font-size: clamp(35px, 5vw, 65px);
+  letter-spacing: -3px;
+  margin-bottom: 15px;
+}
+
+.section-description {
+  color: #9299aa;
+  max-width: 650px;
+  line-height: 1.7;
+  font-size: 17px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 45px;
+}
+
+.card {
+  padding: 28px;
+
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.09);
+
+  border-radius: 25px;
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  transition: .25s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(155,124,255,.35);
+  background: rgba(255,255,255,.07);
+}
+
+.card-icon {
+  font-size: 30px;
+  margin-bottom: 18px;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 21px;
+}
+
+.card p {
+  color: #969dae;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.code-window {
+  margin-top: 50px;
+
+  border-radius: 25px;
+  overflow: hidden;
+
+  border: 1px solid rgba(255,255,255,.1);
+
+  background: #0c0e13;
+
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.4),
+    0 0 80px rgba(139,92,246,.08);
+}
+
+.window-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0 16px;
+
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #555;
+}
+
+.code {
+  padding: 30px;
+  overflow-x: auto;
+
+  color: #d9dcef;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.keyword {
+  color: #c09cff;
+}
+
+.string {
+  color: #8ee7c7;
+}
+
+.function {
+  color: #78c7ff;
+}
+
+.number {
+  color: #ffcb7a;
+}
+
+.cta {
+  text-align: center;
+  padding: 130px 20px;
+}
+
+.cta h2 {
+  font-size: clamp(45px, 7vw, 85px);
+  letter-spacing: -5px;
+  margin: 0 0 25px;
+}
+
+.cta p {
+  color: #999faf;
+  font-size: 18px;
+  margin-bottom: 35px;
+}
+
+footer {
+  padding: 35px 20px;
+  text-align: center;
+
+  color: #656b7b;
+
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  h1 {
+    letter-spacing: -5px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">
+    <span>F</span>lux
+  </div>
+
+  <div class="nav-links">
+    <a href="#language">Language</a>
+    <a href="#learn">Learn</a>
+    <a href="#examples">Examples</a>
+    <a href="https://github.com/">GitHub</a>
+  </div>
+</nav>
+
+<main>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="badge">
+      <span class="badge-dot"></span>
+      The Flux programming language
+    </div>
+
+    <h1>Flux</h1>
+
+    <h2>
+      One language.<br>
+      Anything.
+    </h2>
+
+    <p>
+      Flux is a modern programming language designed to make
+      building software feel simple, powerful and natural.
+    </p>
+
+    <div class="buttons">
+
+      <a class="button primary" href="#learn">
+        Learn Flux
+      </a>
+
+      <a class="button secondary" href="#examples">
+        See Examples
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section id="language">
+
+  <div class="section-title">
+    Built for everything.
+  </div>
+
+  <div class="section-description">
+    Flux is designed to grow from simple programs into
+    serious applications, games, websites, servers and more.
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Simple</h3>
+      <p>
+        Flux syntax is designed to be readable without
+        sacrificing power.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h3>Universal</h3>
+      <p>
+        Build applications, websites, games, tools,
+        servers and whatever comes next.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🧠</div>
+      <h3>Powerful</h3>
+      <p>
+        A language designed to grow with you from your
+        first program to advanced projects.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section id="examples">
+
+  <div class="section-title">
+    Flux feels different.
+  </div>
+
+  <div class="section-description">
+    Clean syntax. Less noise. More focus on what you're
+    actually trying to build.
+  </div>
+
+  <div class="code-window">
+
+    <div class="window-bar">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+
+      <span style="margin-left:10px;color:#707789;font-size:13px">
+        hello.flux
+      </span>
+    </div>
+
+    <div class="code">
+
+<span class="keyword">make</span> name = <span class="string">"Flux"</span>
+
+<span class="keyword">create</span> greet(person)
+    <span class="function">say</span> <span class="string">"Hello ${person}!"</span>
+<span class="keyword">done</span>
+
+greet(name)
+
+    </div>
+
+  </div>
+
+</section>
+
+<section id="learn">
+
+  <div class="section-title">
+    Learn by building.
+  </div>
+
+  <div class="section-description">
+    Flux is designed to be approachable. Start with tiny
+    programs and work your way toward real applications.
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-icon">📖</div>
+      <h3>Learn Flux</h3>
+      <p>
+        Learn the language from the beginning with
+        interactive examples and challenges.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🧪</div>
+      <h3>Experiment</h3>
+      <p>
+        Try ideas, break things and discover what Flux
+        can do.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🚀</div>
+      <h3>Build</h3>
+      <p>
+        Take what you've learned and turn it into
+        real projects.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="cta">
+
+  <h2>
+    Start with Flux.
+  </h2>
+
+  <p>
+    The language is only the beginning.
+  </p>
+
+  <div class="buttons">
+
+    <a class="button primary" href="#learn">
+      Learn Flux
+    </a>
+
+    <a class="button secondary" href="https://github.com/">
+      View on GitHub
+    </a>
+
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  Flux Programming Language · Built for anything.
+</footer>
+
+</body>
+</html>
